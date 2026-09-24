@@ -1,0 +1,57 @@
+{
+    "name": "cbagdawala/innlogger",
+    "description": "Laravel SDK for InnLogger: signed, fail-silent application log and exception shipping.",
+    "type": "library",
+    "license": "proprietary",
+    "keywords": ["laravel", "logging", "monitoring", "innlogger", "exceptions"],
+    "authors": [
+        {
+            "name": "Chintan Bagdawala",
+            "email": "chintan@bagdawala.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.5",
+        "illuminate/console": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/http": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/log": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+        "monolog/monolog": "^3.0",
+        "psr/log": "^1.1|^2.0|^3.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^10.5|^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cbagdawala\\InnLogger\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cbagdawala\\InnLogger\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cbagdawala\\InnLogger\\Laravel\\InnLoggerServiceProvider"
+            ],
+            "aliases": {
+                "InnLogger": "Cbagdawala\\InnLogger\\Laravel\\Facades\\InnLogger"
+            }
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

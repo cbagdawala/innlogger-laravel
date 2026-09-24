@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing" force="true"/>
+        <server name="APP_ENV" value="testing" force="true"/>
+        <env name="INNLOGGER_URL" value="" force="true"/>
+        <server name="INNLOGGER_URL" value="" force="true"/>
+        <env name="INNLOGGER_API_KEY" value="" force="true"/>
+        <server name="INNLOGGER_API_KEY" value="" force="true"/>
+        <env name="INNLOGGER_API_SECRET" value="" force="true"/>
+        <server name="INNLOGGER_API_SECRET" value="" force="true"/>
+    </php>
+</phpunit>
