@@ -1,7 +1,7 @@
 # InnLogger Laravel SDK (`cbagdawala/innlogger`)
 
 Ships application logs and exceptions from a Laravel app to an
-[InnLogger](../../docs/spec/00-README.md) portal over signed HTTPS requests. It is
+InnLogger portal over signed HTTPS requests. It is
 built to never break the host application: short timeouts, every failure
 swallowed, no recursion.
 
@@ -14,39 +14,32 @@ swallowed, no recursion.
 
 ## Installation
 
-The package is not on Packagist yet. Install it from the monorepo with a
-`path` repository (local checkout) or a `vcs` repository (Git).
+The package is published to the private repository `github.com/cbagdawala/innlogger-laravel`.
+The server that runs Composer needs read access to it. The simplest way is a GitHub token with
+**Contents: read-only** on the SDK repositories, set once per server:
 
-**Path repository**, when the InnLogger repository is checked out next to your app:
-
-```json
-{
-    "repositories": [
-        { "type": "path", "url": "../inn-logger-prime-2026/packages/sdk-laravel", "options": { "symlink": true } }
-    ],
-    "require": { "cbagdawala/innlogger": "*" }
-}
+```bash
+composer config --global --auth github-oauth.github.com <read-only-token>
 ```
 
-**VCS repository** (Composer reads the package from the Git repository; because the
-package lives in a subdirectory, use a path repository on a checkout, or a
-split repository/private Packagist, until it is published):
+Then add the repository to your application's `composer.json`:
 
 ```json
 {
     "repositories": [
-        { "type": "vcs", "url": "git@github.com:cbagdawala/innlogger-laravel.git" }
+        { "type": "vcs", "url": "https://github.com/cbagdawala/innlogger-laravel" }
     ],
     "require": { "cbagdawala/innlogger": "^1.0" }
 }
 ```
 
-Then:
-
 ```bash
 composer update cbagdawala/innlogger
 php artisan vendor:publish --tag=innlogger-config   # optional: config/innlogger.php
 ```
+
+With an SSH key that can read the repository instead of a token, use
+`{ "type": "vcs", "url": "git@github.com:cbagdawala/innlogger-laravel.git", "no-api": true }`.
 
 The service provider and the `InnLogger` alias are auto-discovered.
 
@@ -259,6 +252,8 @@ $client->error('Payment failed', ['order_id' => 1]);
 ```
 
 ## Testing the package
+
+> This package is developed in the InnLogger repository (`inn-logger-prime-2026`, under `packages/`) and published here automatically. Make changes there, not in the published repository; see `docs/operations/sdk-releases.md` in that repository.
 
 Run inside the divaa-docker app container (never locally):
 
