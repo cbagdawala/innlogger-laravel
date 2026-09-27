@@ -2,6 +2,11 @@
 
 All notable changes to `cbagdawala/innlogger` are listed here. Versions follow [semantic versioning](https://semver.org).
 
+## 1.2.0 (2026-09-27)
+
+- `innlogger:import`: backfills existing Laravel log files (`storage/logs/laravel*.log` by default) at their original times. Imported events are flagged so they never send alerts; event IDs are derived from each entry, so re-running never duplicates. Options: `--since`, `--until`, `--level`, `--environment`, `--rate`, `--alerts`, `--dry-run`.
+- `Client::pausedFor()`: seconds until sending resumes after an HTTP 429.
+
 ## 1.1.0 (2026-09-27)
 
 - Supports Laravel 8 and 9 (Monolog 2) as well as Laravel 10 to 13. Tested on each version from 8 to 13.

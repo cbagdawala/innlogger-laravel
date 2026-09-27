@@ -9,7 +9,7 @@ swallowed, no recursion.
 - `InnLogger` facade: `critical`, `error`, `warning`, `notice`, `info`, `debug`, `trace`, `exception`
 - `Log::channel('innlogger')` log channel (and stack support)
 - Optional automatic exception reporting, request context capture and heartbeat
-- `innlogger:test`, `innlogger:status` and `innlogger:heartbeat` Artisan commands
+- `innlogger:test`, `innlogger:status`, `innlogger:heartbeat` and `innlogger:import` Artisan commands
 - Recursive, case-insensitive redaction plus value masking
 
 ## Installation
@@ -146,6 +146,34 @@ php artisan innlogger:test     # sends a test event (bypasses the threshold) and
 php artisan innlogger:status   # shows the configuration (secret never printed) and sends a heartbeat
 php artisan innlogger:status --offline
 ```
+
+### Importing existing log files
+
+`innlogger:import` backfills what is already in `storage/logs` (for example, the history from
+before you installed the SDK):
+
+```bash
+php artisan innlogger:import --dry-run                 # count what would be sent, send nothing
+php artisan innlogger:import                           # storage/logs/laravel*.log
+php artisan innlogger:import storage/logs/laravel-2026-09-*.log --since=2026-09-01 --level=warning
+```
+
+- Entries keep their **original time**. Times without an offset are read in `app.timezone`.
+- Imported events **never trigger email alerts**, and they don't count as recent activity
+  in the portal. Pass `--alerts` if you do want your notification rules to run on them.
+- Re-running is safe: each entry gets an event ID derived from its content, and the portal
+  skips IDs it already stored. If an import stops (network, rate limit), run the same command again.
+- `--level` defaults to `INNLOGGER_LOG_LEVEL` (2 = ERROR and CRITICAL); `--until` stops before
+  a time; `--environment` overrides the environment written in each entry.
+- `--rate` caps events per second (default 50; the portal allows 10,000 per minute per project,
+  shared with live traffic). A rate-limited import waits and carries on.
+- Stack traces, the exception class, file and line are rebuilt from the log text. Context is
+  redacted like live events. Anything older than the project's retention period is removed by
+  the portal's next nightly cleanup.
+
+Requires an InnLogger portal that supports imported events (2026-09-27 or later). An older
+portal stores the events but sends alerts for them, so do a `--dry-run` and check with the
+portal's administrator first.
 
 ## Threshold semantics
 

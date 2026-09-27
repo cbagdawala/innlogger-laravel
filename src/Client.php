@@ -107,6 +107,14 @@ class Client
     }
 
     /** Would an event of this severity be transmitted right now? */
+    /**
+     * Seconds until sending resumes after an HTTP 429 (0 when not paused).
+     */
+    public function pausedFor(): int
+    {
+        return max(0, $this->pausedUntil - ($this->clock)());
+    }
+
     public function shouldSend(int $level): bool
     {
         return $this->config->enabled && Severity::shouldSend($level, $this->config->logLevel);

@@ -7,6 +7,7 @@ namespace Cbagdawala\InnLogger\Laravel;
 use Cbagdawala\InnLogger\Client;
 use Cbagdawala\InnLogger\Config;
 use Cbagdawala\InnLogger\Laravel\Console\HeartbeatCommand;
+use Cbagdawala\InnLogger\Laravel\Console\ImportCommand;
 use Cbagdawala\InnLogger\Laravel\Console\StatusCommand;
 use Cbagdawala\InnLogger\Laravel\Console\TestCommand;
 use Cbagdawala\InnLogger\Laravel\Logging\CreateInnLoggerLogger;
@@ -96,6 +97,7 @@ final class InnLoggerServiceProvider extends ServiceProvider
                 TestCommand::class,
                 StatusCommand::class,
                 HeartbeatCommand::class,
+                ImportCommand::class,
             ]);
         }
 
