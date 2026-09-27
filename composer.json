@@ -2,7 +2,7 @@
     "name": "cbagdawala/innlogger",
     "description": "Laravel SDK for InnLogger: signed, fail-silent application log and exception shipping.",
     "type": "library",
-    "license": "proprietary",
+    "license": "MIT",
     "keywords": ["laravel", "logging", "monitoring", "innlogger", "exceptions"],
     "authors": [
         {

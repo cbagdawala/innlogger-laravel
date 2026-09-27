@@ -14,32 +14,10 @@ swallowed, no recursion.
 
 ## Installation
 
-The package is published to the private repository `github.com/cbagdawala/innlogger-laravel`.
-The server that runs Composer needs read access to it. The simplest way is a GitHub token with
-**Contents: read-only** on the SDK repositories, set once per server:
-
 ```bash
-composer config --global --auth github-oauth.github.com <read-only-token>
-```
-
-Then add the repository to your application's `composer.json`:
-
-```json
-{
-    "repositories": [
-        { "type": "vcs", "url": "https://github.com/cbagdawala/innlogger-laravel" }
-    ],
-    "require": { "cbagdawala/innlogger": "^1.0" }
-}
-```
-
-```bash
-composer update cbagdawala/innlogger
+composer require cbagdawala/innlogger
 php artisan vendor:publish --tag=innlogger-config   # optional: config/innlogger.php
 ```
-
-With an SSH key that can read the repository instead of a token, use
-`{ "type": "vcs", "url": "git@github.com:cbagdawala/innlogger-laravel.git", "no-api": true }`.
 
 The service provider and the `InnLogger` alias are auto-discovered.
 
@@ -253,15 +231,9 @@ $client->error('Payment failed', ['order_id' => 1]);
 
 ## Testing the package
 
-> This package is developed in the InnLogger repository (`inn-logger-prime-2026`, under `packages/`) and published here automatically. Make changes there, not in the published repository; see `docs/operations/sdk-releases.md` in that repository.
-
-Run inside the divaa-docker app container (never locally):
+> This repository is a read-only mirror, published automatically from the private InnLogger repository. Pull requests here would be overwritten; please open an issue instead.
 
 ```bash
-mutagen sync flush innlogger
-ssh divaa-docker 'docker exec -w /var/www/html/packages/sdk-laravel innlogger-app composer install --no-interaction'
-ssh divaa-docker 'docker exec -w /var/www/html/packages/sdk-laravel innlogger-app ./vendor/bin/phpunit'
+composer install
+./vendor/bin/phpunit
 ```
-
-In your own app's tests, `Http::fake()` intercepts InnLogger traffic (default `laravel`
-transport), or set `INNLOGGER_ENABLED=false`.
