@@ -17,6 +17,7 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Log\LogManager;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -40,7 +41,13 @@ final class InnLoggerServiceProvider extends ServiceProvider
                 return new GuzzleTransport();
             }
 
-            return new LaravelHttpTransport(static fn (): HttpFactory => $app->make(HttpFactory::class));
+            // Resolve through the Http facade: on Laravel 8/9 Http::fake() only swaps the
+            // facade's instance, not the container binding.
+            return new LaravelHttpTransport(static function () use ($app): HttpFactory {
+                $factory = Http::getFacadeRoot();
+
+                return $factory instanceof HttpFactory ? $factory : $app->make(HttpFactory::class);
+            });
         });
 
         $this->app->singleton(Client::class, static function (Application $app): Client {

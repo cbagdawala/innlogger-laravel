@@ -27,6 +27,7 @@ final class SeverityTest extends TestCase
         yield 'negative threshold is off' => [Severity::CRITICAL, -1, false];
     }
 
+    /** @dataProvider matrix */
     #[DataProvider('matrix')]
     public function test_threshold(int $level, int $threshold, bool $expected): void
     {

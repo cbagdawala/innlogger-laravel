@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Cbagdawala\InnLogger\Tests\Feature;
 
 use Cbagdawala\InnLogger\Laravel\Logging\CreateInnLoggerLogger;
+use Cbagdawala\InnLogger\Laravel\Logging\InnLoggerHandler;
+use Cbagdawala\InnLogger\Laravel\Logging\InnLoggerMonolog2Handler;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -107,6 +109,17 @@ final class LogChannelTest extends TestCase
         Log::channel('app_stack')->error('via stack');
 
         Http::assertSentCount(1);
+    }
+
+    public function test_handler_matches_the_installed_monolog(): void
+    {
+        $handlers = Log::channel('innlogger')->getLogger()->getHandlers();
+
+        $this->assertCount(1, $handlers);
+        $this->assertInstanceOf(
+            class_exists(\Monolog\LogRecord::class) ? InnLoggerHandler::class : InnLoggerMonolog2Handler::class,
+            $handlers[0],
+        );
     }
 
     public function test_custom_via_factory(): void

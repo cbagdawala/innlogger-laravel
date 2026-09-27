@@ -2,6 +2,11 @@
 
 All notable changes to `cbagdawala/innlogger` are listed here. Versions follow [semantic versioning](https://semver.org).
 
+## 1.1.0 (2026-09-27)
+
+- Supports Laravel 8 and 9 (Monolog 2) as well as Laravel 10 to 13. Tested on each version from 8 to 13.
+- `Http::fake()` in the host app's tests now intercepts InnLogger requests on Laravel 8 and 9 too.
+
 ## 1.0.1 (2026-09-27)
 
 - Released under the MIT licence and published on Packagist: install with a plain `composer require`, no repository entry or token needed.

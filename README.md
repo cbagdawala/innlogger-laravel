@@ -5,7 +5,7 @@ InnLogger portal over signed HTTPS requests. It is
 built to never break the host application: short timeouts, every failure
 swallowed, no recursion.
 
-- Laravel 10, 11, 12 and 13, PHP 8.1+
+- Laravel 8, 9, 10, 11, 12 and 13, PHP 8.1+
 - `InnLogger` facade: `critical`, `error`, `warning`, `notice`, `info`, `debug`, `trace`, `exception`
 - `Log::channel('innlogger')` log channel (and stack support)
 - Optional automatic exception reporting, request context capture and heartbeat

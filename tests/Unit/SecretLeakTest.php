@@ -41,6 +41,8 @@ final class SecretLeakTest extends TestCase
 
     /**
      * @param  \Closure(): object  $factory
+     *
+     * @dataProvider holders
      */
     #[DataProvider('holders')]
     public function test_dumps_never_contain_the_secret(\Closure $factory): void
