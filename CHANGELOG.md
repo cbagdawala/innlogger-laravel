@@ -2,6 +2,11 @@
 
 All notable changes to `cbagdawala/innlogger` are listed here. Versions follow [semantic versioning](https://semver.org).
 
+## 1.2.2 (2026-09-28)
+
+- Fixes heartbeats silently stopping for up to 24 hours when `INNLOGGER_HEARTBEAT=true`. The built-in schedule ran `innlogger:heartbeat` with `runInBackground()` and `withoutOverlapping()`; a background run releases its overlap lock only through a follow-up `schedule:finish`, so when the host killed that child process the lock stayed for Laravel's default 1440 minutes (`schedule:list` showed "Has Mutex") and the project appeared offline. The heartbeat now runs in the foreground (it is a single short HTTP call) with `withoutOverlapping(10)`, so a stale lock expires after 10 minutes at most.
+- Upgrading: an install already stuck with a stale lock recovers by itself within 24 hours; to recover at once, run `php artisan schedule:clear-cache` once after `composer update cbagdawala/innlogger`.
+
 ## 1.2.1 (2026-09-28)
 
 - Supports Guzzle 8 as well as Guzzle 7 (`guzzlehttp/guzzle` `^7.5|^8.0`). Laravel 13 apps with Guzzle 8 locked can now install the SDK; Composer keeps Guzzle 7 where the app requires it. Tested with Guzzle 8 on Laravel 8, 10 and 13, and Guzzle 7 on Laravel 8, 12 and 13.

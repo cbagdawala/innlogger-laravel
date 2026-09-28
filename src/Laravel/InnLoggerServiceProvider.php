@@ -106,8 +106,13 @@ final class InnLoggerServiceProvider extends ServiceProvider
         }
 
         if ($this->enabled('innlogger.heartbeat.schedule')) {
+            // Runs in the foreground: a heartbeat is one short HTTP call. With runInBackground()
+            // the overlap mutex is only released by a background `schedule:finish`; if the host
+            // kills that child, the mutex (24 h by default) blocks every heartbeat. The mutex
+            // here expires after 10 minutes. Not onOneServer(): each host reports its own
+            // hostname.
             $this->callAfterResolving(Schedule::class, static function (Schedule $schedule): void {
-                $schedule->command('innlogger:heartbeat')->everyFiveMinutes()->withoutOverlapping()->runInBackground();
+                $schedule->command('innlogger:heartbeat')->everyFiveMinutes()->withoutOverlapping(10);
             });
         }
     }

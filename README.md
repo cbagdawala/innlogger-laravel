@@ -60,7 +60,7 @@ INNLOGGER_AUTO_EXCEPTION=true
 | `INNLOGGER_DIAGNOSTICS_CHANNEL` | `diagnostics_channel` | – | Local log channel for delivery failures (e.g. `single`). |
 | `INNLOGGER_CAPTURE_REQUEST` | `capture.request` | `true` | Capture route/method/URL/request ID/status. |
 | `INNLOGGER_CAPTURE_USER` | `capture.user` | `true` | Capture the authenticated user ID. |
-| `INNLOGGER_HEARTBEAT` | `heartbeat.schedule` | `false` | Schedule `innlogger:heartbeat` every five minutes. |
+| `INNLOGGER_HEARTBEAT` | `heartbeat.schedule` | `false` | Schedule `innlogger:heartbeat` every five minutes (needs the `schedule:run` cron; see *Heartbeat*). |
 | – | `redact_fields` | see file | Extra keys to redact. |
 | – | `mask_patterns` | `[]` | Extra `regex => replacement` masking rules. |
 | – | `limits.*` | 16 KB / 64 KB | Message, trace, context and metadata size limits. |
@@ -135,8 +135,28 @@ To also record the response status code and a stable request ID (taken from
 ### Heartbeat
 
 `php artisan innlogger:heartbeat` posts `{environment, hostname, application_version}` to
-`/api/v1/heartbeat`. Schedule it yourself or set `INNLOGGER_HEARTBEAT=true`.
-Heartbeats honour `enabled` but not the log threshold.
+`/api/v1/heartbeat`. Schedule it yourself or set `INNLOGGER_HEARTBEAT=true`, which registers
+it as `everyFiveMinutes()->withoutOverlapping(10)`. It runs in the foreground (not
+`runInBackground()`), since it is one short HTTP call, and it is not `onOneServer()`: each server
+reports its own hostname. Heartbeats honour `enabled` but not the log threshold.
+
+Laravel's scheduler only runs if the server's cron calls it every minute:
+
+```cron
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+**Troubleshooting: the project shows offline.** Run `php artisan schedule:list`. If the
+`innlogger:heartbeat` entry shows "Has Mutex", a stale overlap lock is blocking it (SDK
+versions before 1.2.2 ran the heartbeat in the background, and a killed background run left the
+lock for 24 hours). Upgrade, then clear the lock once:
+
+```bash
+php artisan schedule:clear-cache
+```
+
+If nothing is listed, check that `INNLOGGER_HEARTBEAT=true` is set (and the config cache
+refreshed with `php artisan config:cache`) and that the cron entry above exists.
 
 ### Artisan commands
 
