@@ -2,6 +2,11 @@
 
 All notable changes to `cbagdawala/innlogger` are listed here. Versions follow [semantic versioning](https://semver.org).
 
+## 1.2.1 (2026-09-28)
+
+- Supports Guzzle 8 as well as Guzzle 7 (`guzzlehttp/guzzle` `^7.5|^8.0`). Laravel 13 apps with Guzzle 8 locked can now install the SDK; Composer keeps Guzzle 7 where the app requires it. Tested with Guzzle 8 on Laravel 8, 10 and 13, and Guzzle 7 on Laravel 8, 12 and 13.
+- `timeout` and `connect_timeout` below 1 ms are raised to 1 ms: Guzzle 8 rejects smaller positive values, which would have made every send fail.
+
 ## 1.2.0 (2026-09-27)
 
 - `innlogger:import`: backfills existing Laravel log files (`storage/logs/laravel*.log` by default) at their original times. Imported events are flagged so they never send alerts; event IDs are derived from each entry, so re-running never duplicates. Options: `--since`, `--until`, `--level`, `--environment`, `--rate`, `--alerts`, `--dry-run`.

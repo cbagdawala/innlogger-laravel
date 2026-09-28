@@ -168,7 +168,8 @@ final class Config
     {
         $float = is_numeric($value) ? (float) $value : $default;
 
-        return $float > 0 ? min($float, 30.0) : $default;
+        // Guzzle 8 rejects positive timeouts below 1 ms (Guzzle 7 treated them as "no timeout").
+        return $float > 0 ? max(0.001, min($float, 30.0)) : $default;
     }
 
     private static function nullableString(mixed $value): ?string
